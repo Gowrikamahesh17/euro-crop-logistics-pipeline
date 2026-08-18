@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Euro Crop Pipeline — Live Architecture</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#F7F5F0;
+    --bg-raised:#FFFFFF;
+    --ink:#1C1E1A;
+    --ink-soft:#4B4E46;
+    --accent:#4A5D3A;
+    --accent-soft:#E4E9DC;
+    --warn:#B5691E;
+    --warn-soft:#F5E4D2;
+    --infra:#5B6B7A;
+    --infra-soft:#E3E8EC;
+    --line:#D9D4C8;
+    --line-strong:#B9B29E;
+    --done:#4A5D3A;
+    --done-soft:#E4E9DC;
+    --progress:#B5691E;
+    --progress-soft:#F5E4D2;
+    --pending-fill:#FFFFFF;
+    --pending-stroke:#B9B29E;
+    --shadow: 0 1px 2px rgba(28,30,26,0.06), 0 6px 20px rgba(28,30,26,0.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#16170F;
+      --bg-raised:#1F2119;
+      --ink:#EDEAE0;
+      --ink-soft:#B7B4A6;
+      --accent:#93AC79;
+      --accent-soft:#293522;
+      --warn:#E0975A;
+      --warn-soft:#3A2A1A;
+      --infra:#9FB1C0;
+      --infra-soft:#232B32;
+      --line:#33352A;
+      --line-strong:#484A3B;
+      --done:#93AC79;
+      --done-soft:#293522;
+      --progress:#E0975A;
+      --progress-soft:#3A2A1A;
+      --pending-fill:#1F2119;
+      --pending-stroke:#484A3B;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#16170F;
+    --bg-raised:#1F2119;
+    --ink:#EDEAE0;
+    --ink-soft:#B7B4A6;
+    --accent:#93AC79;
+    --accent-soft:#293522;
+    --warn:#E0975A;
+    --warn-soft:#3A2A1A;
+    --infra:#9FB1C0;
+    --infra-soft:#232B32;
+    --line:#33352A;
+    --line-strong:#484A3B;
+    --done:#93AC79;
+    --done-soft:#293522;
+    --progress:#E0975A;
+    --progress-soft:#3A2A1A;
+    --pending-fill:#1F2119;
+    --pending-stroke:#484A3B;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 6px 24px rgba(0,0,0,0.35);
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:var(--bg); }
+  body{
+    font-family:"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    color:var(--ink);
+    line-height:1.5;
+  }
+  .wrap{
+    max-width:1240px;
+    margin:0 auto;
+    padding:2.5rem 1.5rem 4rem;
+  }
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:1rem;
+    border-bottom:1px solid var(--line);
+    padding-bottom:1.5rem;
+    margin-bottom:1.75rem;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.7rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:0.4rem;
+  }
+  h1{
+    font-family:"Fraunces", Georgia, serif;
+    font-weight:500;
+    font-size:1.9rem;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .updated{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    text-align:right;
+  }
+  .updated strong{ color:var(--ink); font-weight:500; }
+
+  .progress-track{
+    display:flex;
+    align-items:center;
+    gap:0.9rem;
+    margin-bottom:1.75rem;
+  }
+  .progress-bar{
+    flex:1;
+    height:8px;
+    border-radius:99px;
+    background:var(--pending-stroke);
+    overflow:hidden;
+    position:relative;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--accent), var(--done));
+    border-radius:99px;
+    transition:width 0.4s ease;
+  }
+  .progress-label{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stage{
+    display:flex;
+    gap:1.25rem;
+    align-items:stretch;
+    margin-bottom:2rem;
+  }
+  .diagram-shell{
+    flex:1;
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+    padding:1.5rem;
+    overflow-x:auto;
+    min-width:0;
+  }
+  .diagram-shell svg{
+    display:block;
+    min-width:820px;
+    width:100%;
+    height:auto;
+  }
+
+  .node-label{ font-weight:600; }
+  .node-sub{ font-family:"IBM Plex Mono", monospace; }
+  .edge-label{ font-family:"IBM Plex Mono", monospace; }
+
+  .pipe-node{ cursor:pointer; transition:filter 0.15s ease, transform 0.15s ease; }
+  .pipe-node:hover .node-rect{ filter:brightness(1.06); }
+  .pipe-node:hover{ transform: translateY(-1px); }
+  .pipe-node:focus{ outline:none; }
+  .pipe-node:focus .node-rect{ stroke-width:2.4; }
+  .node-rect{ transition: fill 0.25s ease, stroke 0.25s ease; }
+
+  .status-pill{
+    font-family:"IBM Plex Mono", monospace;
+    font-weight:500;
+  }
+
+  .status-dot{
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .status-dot{ animation:none; }
+  }
+
+  /* side panel */
+  .panel{
+    width:300px;
+    flex-shrink:0;
+    background:var(--bg-raised);
+    border:1px solid var(--line);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+    padding:1.5rem;
+    display:flex;
+    flex-direction:column;
+    gap:0.9rem;
+  }
+  .panel-empty{
+    color:var(--ink-soft);
+    font-size:0.9rem;
+  }
+  .panel-eyebrow{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .panel-title{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:1.05rem;
+    font-weight:500;
+    word-break:break-word;
+  }
+  .panel-status{
+    display:inline-flex;
+    align-items:center;
+    gap:0.4rem;
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.78rem;
+    padding:0.25rem 0.6rem;
+    border-radius:99px;
+    width:fit-content;
+  }
+  .panel-status.done{ background:var(--done-soft); color:var(--done); }
+  .panel-status.in_progress{ background:var(--progress-soft); color:var(--progress); }
+  .panel-status.pending{ background:var(--infra-soft); color:var(--infra); }
+  .panel-note{
+    font-size:0.88rem;
+    color:var(--ink-soft);
+    line-height:1.55;
+  }
+  .panel-role{
+    font-size:0.88rem;
+    color:var(--ink);
+    line-height:1.55;
+    border-top:1px dashed var(--line);
+    padding-top:0.8rem;
+  }
+
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.5rem 1.4rem;
+    margin-top:0;
+    padding-top:1rem;
+    border-top:1px dashed var(--line);
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.74rem;
+    color:var(--ink-soft);
+  }
+  .legend-item{ display:flex; align-items:center; gap:0.45rem; }
+  .swatch{ width:11px; height:11px; border-radius:3px; flex-shrink:0; display:inline-block; }
+
+  .howto{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:0.76rem;
+    color:var(--ink-soft);
+    background:var(--infra-soft);
+    border:1px solid var(--infra);
+    border-radius:8px;
+    padding:0.85rem 1rem;
+    margin-top:1.5rem;
+  }
+  .howto strong{ color:var(--ink); }
+
+  @media (max-width: 900px){
+    .stage{ flex-direction:column; }
+    .panel{ width:auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="eyebrow">Euro Crop Agricultural Logistics Pipeline</div>
+      <h1>Live System Architecture</h1>
+    </div>
+    <div class="updated">state last edited<br><strong id="lastUpdated">—</strong></div>
+  </header>
+
+  <div class="progress-track">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">0 / 0 stages done</div>
+  </div>
+
+  <div class="stage">
+    <div class="diagram-shell">
+      <svg viewBox="0 0 1180 760" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--line-strong)"/>
+          </marker>
+          <marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+          </marker>
+        </defs>
+
+        <!-- Raw data -->
+        <g class="pipe-node" data-id="raw_data" tabindex="0" role="button" aria-label="data/raw">
+          <rect class="node-rect" x="30" y="40" width="200" height="64" rx="8" stroke-width="1.4"/>
+          <text x="130" y="65" text-anchor="middle" class="node-label" font-size="14" fill="var(--ink)">data/raw/</text>
+          <text x="130" y="84" text-anchor="middle" class="node-sub" font-size="11" fill="var(--ink-soft)">EuroCrop CSV · 53,305 rows</text>
+        </g>
+
+        <line x1="230" y1="72" x2="290" y2="72" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+        <!-- data_loader -->
+        <g class="pipe-node" data-id="data_loader" tabindex="0" role="button" aria-label="data_loader.py">
+          <rect class="node-rect" x="290" y="40" width="210" height="64" rx="8" stroke-width="1.4"/>
+          <text x="395" y="65" text-anchor="middle" class="node-label" font-size="14" fill="var(--ink)">src/data_loader.py</text>
+          <text x="395" y="84" text-anchor="middle" class="node-sub" font-size="11" fill="var(--ink-soft)">.env path resolve · ingestion</text>
+        </g>
+
+        <line x1="500" y1="72" x2="560" y2="72" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+        <!-- preprocessor -->
+        <g class="pipe-node" data-id="preprocessor" tabindex="0" role="button" aria-label="preprocessor.py">
+          <rect class="node-rect" x="560" y="40" width="230" height="64" rx="8" stroke-width="1.4"/>
+          <text x="675" y="65" text-anchor="middle" class="node-label" font-size="14" fill="var(--ink)">src/preprocessor.py</text>
+          <text x="675" y="84" text-anchor="middle" class="node-sub" font-size="11" fill="var(--ink-soft)">contract validation · encode · scale</text>
+        </g>
+
+        <line x1="790" y1="72" x2="850" y2="72" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+        <!-- processed split -->
+        <g class="pipe-node" data-id="processed_split" tabindex="0" role="button" aria-label="data/processed">
+          <rect class="node-rect" x="850" y="40" width="200" height="64" rx="8" stroke-width="1.4"/>
+          <text x="950" y="65" text-anchor="middle" class="node-label" font-size="14" fill="var(--ink)">data/processed/</text>
+          <text x="950" y="84" text-anchor="middle" class="node-sub" font-size="11" fill="var(--ink-soft)">4× leakage-free train/test</text>
+        </g>
+
+        <line x1="950" y1="104" x2="950" y2="150" stroke="var(--line-strong)" stroke-width="1.6"/>
+        <line x1="190" y1="150" x2="950" y2="150" stroke="var(--line-strong)" stroke-width="1.6"/>
+        <line x1="190" y1="150" x2="190" y2="190" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="440" y1="150" x2="440" y2="190" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="690" y1="150" x2="690" y2="190" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="950" y1="150" x2="950" y2="190" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+        <!-- 4 target pipelines -->
+        <g class="pipe-node" data-id="target_spoilage" tabindex="0" role="button" aria-label="Spoilage_Risk model">
+          <rect class="node-rect" x="80" y="190" width="220" height="56" rx="8" stroke-width="1.4"/>
+          <text x="190" y="212" text-anchor="middle" class="node-label" font-size="13" fill="var(--ink)">Spoilage_Risk</text>
+          <text x="190" y="230" text-anchor="middle" class="node-sub" font-size="10.5" fill="var(--ink-soft)">regression · vibration + env</text>
+        </g>
+        <g class="pipe-node" data-id="target_efficiency" tabindex="0" role="button" aria-label="Efficiency_Ratio model">
+          <rect class="node-rect" x="330" y="190" width="220" height="56" rx="8" stroke-width="1.4"/>
+          <text x="440" y="212" text-anchor="middle" class="node-label" font-size="13" fill="var(--ink)">Efficiency_Ratio</text>
+          <text x="440" y="230" text-anchor="middle" class="node-sub" font-size="10.5" fill="var(--ink-soft)">regression · fuel + cost + time</text>
+        </g>
+        <g class="pipe-node" data-id="target_quality" tabindex="0" role="button" aria-label="Quality_Maintenance model">
+          <rect class="node-rect" x="580" y="190" width="220" height="56" rx="8" stroke-width="1.4"/>
+          <text x="690" y="212" text-anchor="middle" class="node-label" font-size="13" fill="var(--ink)">Quality_Maintenance</text>
+          <text x="690" y="230" text-anchor="middle" class="node-sub" font-size="10.5" fill="var(--ink-soft)">regression · storage + IoT</text>
+        </g>
+        <g class="pipe-node" data-id="target_croptype" tabindex="0" role="button" aria-label="Crop_Type / Vehicle_Type model">
+          <rect class="node-rect" x="840" y="190" width="220" height="56" rx="8" stroke-width="1.4"/>
+          <text x="950" y="212" text-anchor="middle" class="node-label" font-size="13" fill="var(--ink)">Crop_Type / Vehicle_Type</text>
+          <text x="950" y="230" text-anchor="middle" class="node-sub" font-size="10.5" fill="var(--ink-soft)">multiclass classification</text>
+        </g>
+
+        <line x1="190" y1="246" x2="190" y2="286" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="440" y1="246" x2="440" y2="286" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="690" y1="246" x2="690" y2="286" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="950" y1="246" x2="950" y2="286" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+        <!-- train.py -->
+        <g class="pipe-node" data-id="train" tabindex="0" role="button" aria-label="train.py">
+          <rect class="node-rect" x="80" y="286" width="980" height="60" rx="8" stroke-width="1.4"/>
+          <text x="570" y="311" text-anchor="middle" class="node-label" font-size="14" fill="var(--ink)">src/train.py</text>
+          <text x="570" y="330" text-anchor="middle" class="node-sub" font-size="11" fill="var(--ink-soft)">baseline → ensemble → tuned, fit independently per target</text>
+        </g>
+
+        <line x1="570" y1="346" x2="570" y2="386" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+        <!-- models/ -->
+        <g class="pipe-node" data-id="models" tabindex="0" role="button" aria-label="models directory">
+          <rect class="node-rect" x="380" y="386" width="380" height="60" rx="8" stroke-width="1.4"/>
+          <text x="570" y="411" text-anchor="middle" class="node-label" font-size="14" fill="var(--ink)">models/</text>
+          <text x="570" y="430" text-anchor="middle" class="node-sub" font-size="11" fill="var(--ink-soft)">4× serialized .joblib binaries</text>
+        </g>
+
+        <line x1="570" y1="446" x2="570" y2="486" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+        <!-- evaluate.py -->
+        <g class="pipe-node" data-id="evaluate" tabindex="0" role="button" aria-label="evaluate.py">
+          <rect class="node-rect" x="330" y="486" width="480" height="60" rx="8" stroke-width="1.4"/>
+          <text x="570" y="511" text-anchor="middle" class="node-label" font-size="14" fill="var(--ink)">src/evaluate.py</text>
+          <text x="570" y="530" text-anchor="middle" class="node-sub" font-size="11" fill="var(--ink-soft)">metrics · residuals · diagnostics · feature importance</text>
+        </g>
+
+        <line x1="470" y1="546" x2="200" y2="600" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+        <line x1="670" y1="546" x2="940" y2="600" stroke="var(--line-strong)" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+        <g class="pipe-node" data-id="docs" tabindex="0" role="button" aria-label="docs directory">
+          <rect class="node-rect" x="60" y="600" width="280" height="58" rx="8" stroke-width="1.4"/>
+          <text x="200" y="624" text-anchor="middle" class="node-label" font-size="13" fill="var(--ink)">docs/</text>
+          <text x="200" y="643" text-anchor="middle" class="node-sub" font-size="10.5" fill="var(--ink-soft)">visualizations · architecture notes</text>
+        </g>
+
+        <g class="pipe-node" data-id="logs" tabindex="0" role="button" aria-label="logs directory">
+          <rect class="node-rect" x="800" y="600" width="280" height="58" rx="8" stroke-width="1.4"/>
+          <text x="940" y="624" text-anchor="middle" class="node-label" font-size="13" fill="var(--ink)">logs/</text>
+          <text x="940" y="643" text-anchor="middle" class="node-sub" font-size="10.5" fill="var(--ink-soft)">step execution · debug traces</text>
+        </g>
+
+        <path d="M940 600 C 940 460, 700 300, 900 104" fill="none" stroke="var(--warn)" stroke-width="1.2" stroke-dasharray="3 4" marker-end="url(#arrowAccent)" opacity="0.55"/>
+        <text x="1000" y="360" class="node-sub" font-size="10" fill="var(--warn)" transform="rotate(90 1000 360)" opacity="0.75">logging touches every stage</text>
+
+        <text x="30" y="680" class="edge-label" font-size="11" fill="var(--ink-soft)">01_eda_inspection.ipynb → 02_preprocessing.ipynb → 03_model_experiments.ipynb prototype each stage before it lands in src/</text>
+      </svg>
+
+      <div class="legend">
+        <span class="legend-item"><span class="swatch" style="background:var(--done-soft);border:1px solid var(--done);"></span>done</span>
+        <span class="legend-item"><span class="swatch status-dot" style="background:var(--progress-soft);border:1px solid var(--progress);"></span>in progress</span>
+        <span class="legend-item"><span class="swatch" style="background:var(--pending-fill);border:1px solid var(--pending-stroke);"></span>pending</span>
+        <span class="legend-item">hover a node for a quick look · click to pin details</span>
+      </div>
+    </div>
+
+    <div class="panel" id="panel">
+      <div class="panel-empty" id="panelEmpty">Hover or click any node in the diagram to see its role, status, and current note.</div>
+      <div id="panelContent" style="display:none; flex-direction:column; gap:0.9rem;">
+        <div class="panel-eyebrow" id="panelEyebrow">component</div>
+        <div class="panel-title" id="panelTitle"></div>
+        <div class="panel-status" id="panelStatus"></div>
+        <div class="panel-role" id="panelRole"></div>
+        <div class="panel-note" id="panelNote"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="howto">
+    <strong>To update progress:</strong> edit <code>pipeline_state.js</code> in this folder — set a node's <code>status</code> to
+    <code>"done"</code>, <code>"in_progress"</code>, or <code>"pending"</code>, add a short <code>note</code>, save, then refresh this page.
+    No server or build step required — this file opens directly from disk.
+  </div>
+
+</div>
+
+<script src="pipeline_state.js"></script>
+<script>
+(function(){
+  var ROLES = {
+    raw_data:          "Source CSV for the pipeline — 53,305 rows of European agricultural logistics data (France, Germany, Netherlands).",
+    data_loader:        "Resolves the raw data path via .env and hands a loaded DataFrame to the rest of the pipeline.",
+    preprocessor:        "Applies the plausibility contract, handles nulls/inf/out-of-range values, encodes categoricals, scales features.",
+    processed_split:    "Four independent leakage-free train/test splits, one per target — a row dropped for one target can still be valid for another.",
+    target_spoilage:     "Regression target: percentage probability of crop spoilage during transit, driven by environmental + vibration features.",
+    target_efficiency:   "Regression target: logistical performance from fuel consumption, cost, distance, and transit time.",
+    target_quality:      "Regression target: quality preservation index from storage duration and IoT sensor metrics.",
+    target_croptype:     "Multiclass classification target: Crop_Type or Vehicle_Type from operational features.",
+    train:                "Fits baseline → ensemble → tuned models independently per target.",
+    models:               "Serialized .joblib binaries, one per target model.",
+    evaluate:             "Computes metrics, residuals, diagnostics, and feature importance per target.",
+    docs:                  "Visualizations and architecture notes — this diagram lives here.",
+    logs:                  "Execution and debug logs, written throughout every stage."
+  };
+
+  var STATUS_LABEL = { done: "done", in_progress: "in progress", pending: "pending" };
+
+  var state = (window.PIPELINE_STATE && window.PIPELINE_STATE.nodes) ? window.PIPELINE_STATE.nodes : {};
+  var lastUpdated = (window.PIPELINE_STATE && window.PIPELINE_STATE.last_updated) || "unknown";
+  document.getElementById("lastUpdated").textContent = lastUpdated;
+
+  var nodes = document.querySelectorAll(".pipe-node");
+  var pinned = null;
+
+  function colorsFor(status){
+    if(status === "done") return { fill: "var(--done-soft)", stroke: "var(--done)" };
+    if(status === "in_progress") return { fill: "var(--progress-soft)", stroke: "var(--progress)" };
+    return { fill: "var(--pending-fill)", stroke: "var(--pending-stroke)" };
+  }
+
+  function applyStatusStyling(){
+    var doneCount = 0, total = 0;
+    nodes.forEach(function(el){
+      var id = el.getAttribute("data-id");
+      var entry = state[id] || { status: "pending", note: "" };
+      var c = colorsFor(entry.status);
+      var rect = el.querySelector(".node-rect");
+      rect.setAttribute("fill", c.fill);
+      rect.setAttribute("stroke", c.stroke);
+      total++;
+      if(entry.status === "done") doneCount++;
+      if(entry.status === "in_progress"){
+        el.classList.add("status-dot");
+      }
+    });
+    var pct = total ? Math.round((doneCount/total)*100) : 0;
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("progressLabel").textContent = doneCount + " / " + total + " stages done (" + pct + "%)";
+  }
+
+  function showPanel(id){
+    var entry = state[id] || { status: "pending", note: "" };
+    var role = ROLES[id] || "";
+    document.getElementById("panelEmpty").style.display = "none";
+    var content = document.getElementById("panelContent");
+    content.style.display = "flex";
+    document.getElementById("panelEyebrow").textContent = id.replace(/_/g, " ");
+    document.getElementById("panelTitle").textContent = document.querySelector('[data-id="'+id+'"]').getAttribute("aria-label");
+    var statusEl = document.getElementById("panelStatus");
+    statusEl.className = "panel-status " + entry.status;
+    statusEl.textContent = STATUS_LABEL[entry.status] || entry.status;
+    document.getElementById("panelRole").textContent = role;
+    document.getElementById("panelNote").textContent = entry.note ? ("Note: " + entry.note) : "";
+  }
+
+  function clearPanel(){
+    document.getElementById("panelEmpty").style.display = "block";
+    document.getElementById("panelContent").style.display = "none";
+  }
+
+  nodes.forEach(function(el){
+    var id = el.getAttribute("data-id");
+    el.addEventListener("mouseenter", function(){ if(!pinned) showPanel(id); });
+    el.addEventListener("mouseleave", function(){ if(!pinned) clearPanel(); });
+    el.addEventListener("focus", function(){ if(!pinned) showPanel(id); });
+    el.addEventListener("click", function(){
+      pinned = (pinned === id) ? null : id;
+      if(pinned) showPanel(pinned); else clearPanel();
+    });
+    el.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        el.click();
+      }
+    });
+  });
+
+  applyStatusStyling();
+})();
+</script>
+</body>
+</html>

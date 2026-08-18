@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1180 1420" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans', 'Segoe UI', sans-serif">
+  <defs>
+    <style>
+      .node-label{ font-family:'IBM Plex Sans','Segoe UI',sans-serif; font-weight:600; fill:#1C1E1A; }
+      .node-sub{ font-family:'IBM Plex Mono','Courier New',monospace; fill:#4B4E46; }
+      .edge-label{ font-family:'IBM Plex Mono','Courier New',monospace; fill:#4B4E46; }
+      .step-num{ font-family:'IBM Plex Mono','Courier New',monospace; font-weight:500; fill:#4A5D3A; }
+    </style>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#B9B29E"/>
+    </marker>
+    <marker id="arrowWarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#B5691E"/>
+    </marker>
+    <marker id="arrowAccent2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4A5D3A"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="1420" fill="#F7F5F0"/>
+
+  <!-- day spine -->
+  <line x1="60" y1="20" x2="60" y2="1385" stroke="#D9D4C8" stroke-width="1.4" stroke-dasharray="2 5"/>
+
+  <text x="60" y="16" text-anchor="middle" class="step-num" font-size="10.5">DAY 1</text>
+
+  <rect x="100" y="28" width="180" height="44" rx="7" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.2"/>
+  <text x="190" y="46" text-anchor="middle" class="node-label" font-size="11.5">Setup &amp; Scaffolding</text>
+  <text x="190" y="62" text-anchor="middle" class="node-sub" font-size="9.5">done &#183; venv &#183; git &#183; logging</text>
+
+  <line x1="190" y1="72" x2="190" y2="105" stroke="#B9B29E" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <rect x="100" y="105" width="300" height="64" rx="8" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.6"/>
+  <text x="115" y="125" class="step-num" font-size="10.5">STEP 1 &#183; IN PROGRESS</text>
+  <text x="115" y="146" class="node-label" font-size="13.5">Structural &amp; Corruption Audit</text>
+  <text x="115" y="163" class="node-sub" font-size="10">null / inf / out-of-range census, per column &amp; per row</text>
+
+  <line x1="250" y1="169" x2="250" y2="205" stroke="#B9B29E" stroke-width="1.5" marker-end="url(#arrowWarn)"/>
+
+  <polygon points="250,205 340,245 250,285 160,245" fill="#FFFFFF" stroke="#B5691E" stroke-width="1.6"/>
+  <text x="250" y="240" text-anchor="middle" class="node-label" font-size="10.5">corruption</text>
+  <text x="250" y="254" text-anchor="middle" class="node-label" font-size="10.5">pattern?</text>
+
+  <line x1="160" y1="245" x2="120" y2="245" stroke="#B5691E" stroke-width="1.5"/>
+  <line x1="120" y1="245" x2="120" y2="330" stroke="#B5691E" stroke-width="1.5" marker-end="url(#arrowWarn)"/>
+  <text x="105" y="290" class="edge-label" font-size="9.5" transform="rotate(-90 105 290)">binary per row</text>
+  <rect x="5" y="330" width="230" height="52" rx="7" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.3"/>
+  <text x="120" y="352" text-anchor="middle" class="node-label" font-size="10.5">Drop corrupted rows</text>
+  <text x="120" y="368" text-anchor="middle" class="node-sub" font-size="8.7">generation bug &#8594; discard wholesale</text>
+
+  <line x1="340" y1="245" x2="440" y2="245" stroke="#B5691E" stroke-width="1.5"/>
+  <line x1="440" y1="245" x2="440" y2="330" stroke="#B5691E" stroke-width="1.5" marker-end="url(#arrowWarn)"/>
+  <text x="450" y="290" class="edge-label" font-size="9.5">scattered thin</text>
+  <rect x="305" y="330" width="270" height="52" rx="7" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.3"/>
+  <text x="440" y="352" text-anchor="middle" class="node-label" font-size="10.5">Column-wise treatment</text>
+  <text x="440" y="368" text-anchor="middle" class="node-sub" font-size="9">sensor noise &#8594; cap / impute per column</text>
+
+  <line x1="120" y1="382" x2="120" y2="410" stroke="#B9B29E" stroke-width="1.4"/>
+  <line x1="440" y1="382" x2="440" y2="410" stroke="#B9B29E" stroke-width="1.4"/>
+  <line x1="120" y1="410" x2="440" y2="410" stroke="#B9B29E" stroke-width="1.4"/>
+  <line x1="280" y1="410" x2="280" y2="440" stroke="#B9B29E" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <text x="60" y="470" text-anchor="middle" class="step-num" font-size="10.5">DAY 2&#8211;3</text>
+
+  <rect x="100" y="450" width="300" height="60" rx="8" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.4"/>
+  <text x="115" y="470" class="step-num" font-size="10.5">STEP 2</text>
+  <text x="115" y="490" class="node-label" font-size="13">Exploratory Data Analysis</text>
+  <text x="115" y="505" class="node-sub" font-size="9.5">distributions &#183; skew &#183; target correlation</text>
+
+  <line x1="250" y1="510" x2="250" y2="545" stroke="#B9B29E" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <rect x="100" y="545" width="300" height="60" rx="8" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.4"/>
+  <text x="115" y="565" class="step-num" font-size="10.5">STEP 3</text>
+  <text x="115" y="585" class="node-label" font-size="13">Preprocessing &amp; Split</text>
+  <text x="115" y="600" class="node-sub" font-size="9.5">encode &#183; scale &#183; leakage-free split, &#215;4 targets</text>
+
+  <path d="M400 575 C 460 575, 460 620, 520 620" fill="none" stroke="#B5691E" stroke-width="1.2" stroke-dasharray="3 4" marker-end="url(#arrowWarn)"/>
+  <rect x="520" y="595" width="300" height="50" rx="7" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.2"/>
+  <text x="670" y="615" text-anchor="middle" class="node-label" font-size="10.5">check: is any target a formula</text>
+  <text x="670" y="631" text-anchor="middle" class="node-label" font-size="10.5">of its own input features?</text>
+
+  <line x1="250" y1="605" x2="250" y2="645" stroke="#B9B29E" stroke-width="1.5" marker-end="url(#arrow3)"/>
+
+  <rect x="60" y="645" width="480" height="34" rx="6" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.3"/>
+  <text x="300" y="667" text-anchor="middle" class="node-label" font-size="11.5">Gate: 4 clean, independently-split datasets exist</text>
+
+  <line x1="300" y1="679" x2="300" y2="705" stroke="#B9B29E" stroke-width="1.6"/>
+  <line x1="130" y1="705" x2="470" y2="705" stroke="#B9B29E" stroke-width="1.6"/>
+  <line x1="130" y1="705" x2="130" y2="730" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow3)"/>
+  <line x1="363" y1="705" x2="363" y2="730" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow3)"/>
+  <line x1="470" y1="705" x2="470" y2="730" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow3)"/>
+
+  <text x="60" y="720" text-anchor="middle" class="step-num" font-size="10.5">DAY 4&#8211;6</text>
+  <text x="900" y="720" text-anchor="middle" class="node-sub" font-size="10.5" fill="#5B6B7A">same loop, run once per target &#8212; order doesn't matter</text>
+
+  <g>
+    <rect x="70" y="730" width="200" height="32" rx="6" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.2"/>
+    <text x="170" y="751" text-anchor="middle" class="node-label" font-size="11">Spoilage_Risk</text>
+  </g>
+  <g>
+    <rect x="300" y="730" width="200" height="32" rx="6" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.2"/>
+    <text x="400" y="751" text-anchor="middle" class="node-label" font-size="11">Efficiency_Ratio</text>
+  </g>
+  <g>
+    <rect x="530" y="730" width="200" height="32" rx="6" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.2"/>
+    <text x="630" y="751" text-anchor="middle" class="node-label" font-size="11">Quality_Maintenance</text>
+  </g>
+  <g>
+    <rect x="760" y="730" width="200" height="32" rx="6" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.2"/>
+    <text x="860" y="751" text-anchor="middle" class="node-label" font-size="11">Crop / Vehicle Type</text>
+  </g>
+
+  <rect x="55" y="775" width="920" height="330" rx="10" fill="none" stroke="#4A5D3A" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <text x="75" y="796" class="step-num" font-size="10.5" fill="#4A5D3A">ITERATE UNTIL METRIC BAR CLEARS</text>
+
+  <g>
+    <rect x="80" y="815" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="155" y="835" text-anchor="middle" class="node-label" font-size="10.5">Baseline</text>
+    <text x="155" y="850" text-anchor="middle" class="node-sub" font-size="8.5">Linear Reg</text>
+  </g>
+  <g>
+    <rect x="310" y="815" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="385" y="835" text-anchor="middle" class="node-label" font-size="10.5">Baseline</text>
+    <text x="385" y="850" text-anchor="middle" class="node-sub" font-size="8.5">Linear Reg</text>
+  </g>
+  <g>
+    <rect x="540" y="815" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="615" y="835" text-anchor="middle" class="node-label" font-size="10.5">Baseline</text>
+    <text x="615" y="850" text-anchor="middle" class="node-sub" font-size="8.5">Linear Reg</text>
+  </g>
+  <g>
+    <rect x="770" y="815" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="845" y="835" text-anchor="middle" class="node-label" font-size="10.5">Baseline</text>
+    <text x="845" y="850" text-anchor="middle" class="node-sub" font-size="8.5">Logistic Reg</text>
+  </g>
+
+  <line x1="155" y1="861" x2="155" y2="889" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="385" y1="861" x2="385" y2="889" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="615" y1="861" x2="615" y2="889" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="845" y1="861" x2="845" y2="889" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+
+  <g>
+    <rect x="80" y="889" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="155" y="909" text-anchor="middle" class="node-label" font-size="10.5">Ensemble</text>
+    <text x="155" y="924" text-anchor="middle" class="node-sub" font-size="8.5">RF / XGBoost</text>
+  </g>
+  <g>
+    <rect x="310" y="889" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="385" y="909" text-anchor="middle" class="node-label" font-size="10.5">Ensemble</text>
+    <text x="385" y="924" text-anchor="middle" class="node-sub" font-size="8.5">RF / XGBoost</text>
+  </g>
+  <g>
+    <rect x="540" y="889" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="615" y="909" text-anchor="middle" class="node-label" font-size="10.5">Ensemble</text>
+    <text x="615" y="924" text-anchor="middle" class="node-sub" font-size="8.5">RF / XGBoost</text>
+  </g>
+  <g>
+    <rect x="770" y="889" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="845" y="909" text-anchor="middle" class="node-label" font-size="10.5">Ensemble</text>
+    <text x="845" y="924" text-anchor="middle" class="node-sub" font-size="8.5">RF / LightGBM</text>
+  </g>
+
+  <line x1="155" y1="935" x2="155" y2="963" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="385" y1="935" x2="385" y2="963" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="615" y1="935" x2="615" y2="963" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="845" y1="935" x2="845" y2="963" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+
+  <g>
+    <rect x="80" y="963" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="155" y="983" text-anchor="middle" class="node-label" font-size="10.5">Diagnose</text>
+    <text x="155" y="998" text-anchor="middle" class="node-sub" font-size="8.5">residuals / importance</text>
+  </g>
+  <g>
+    <rect x="310" y="963" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="385" y="983" text-anchor="middle" class="node-label" font-size="10.5">Diagnose</text>
+    <text x="385" y="998" text-anchor="middle" class="node-sub" font-size="8.5">residuals / importance</text>
+  </g>
+  <g>
+    <rect x="540" y="963" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="615" y="983" text-anchor="middle" class="node-label" font-size="10.5">Diagnose</text>
+    <text x="615" y="998" text-anchor="middle" class="node-sub" font-size="8.5">residuals / importance</text>
+  </g>
+  <g>
+    <rect x="770" y="963" width="150" height="46" rx="6" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.2"/>
+    <text x="845" y="983" text-anchor="middle" class="node-label" font-size="10.5">Diagnose</text>
+    <text x="845" y="998" text-anchor="middle" class="node-sub" font-size="8.5">confusion matrix</text>
+  </g>
+
+  <line x1="155" y1="1009" x2="155" y2="1037" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="385" y1="1009" x2="385" y2="1037" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="615" y1="1009" x2="615" y2="1037" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+  <line x1="845" y1="1009" x2="845" y2="1037" stroke="#B9B29E" stroke-width="1.3" marker-end="url(#arrow3)"/>
+
+  <g>
+    <rect x="80" y="1037" width="150" height="46" rx="6" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.3"/>
+    <text x="155" y="1057" text-anchor="middle" class="node-label" font-size="10.5">Tune</text>
+    <text x="155" y="1072" text-anchor="middle" class="node-sub" font-size="8.5">hyperparameters</text>
+  </g>
+  <g>
+    <rect x="310" y="1037" width="150" height="46" rx="6" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.3"/>
+    <text x="385" y="1057" text-anchor="middle" class="node-label" font-size="10.5">Tune</text>
+    <text x="385" y="1072" text-anchor="middle" class="node-sub" font-size="8.5">hyperparameters</text>
+  </g>
+  <g>
+    <rect x="540" y="1037" width="150" height="46" rx="6" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.3"/>
+    <text x="615" y="1057" text-anchor="middle" class="node-label" font-size="10.5">Tune</text>
+    <text x="615" y="1072" text-anchor="middle" class="node-sub" font-size="8.5">hyperparameters</text>
+  </g>
+  <g>
+    <rect x="770" y="1037" width="150" height="46" rx="6" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.3"/>
+    <text x="845" y="1057" text-anchor="middle" class="node-label" font-size="10.5">Tune</text>
+    <text x="845" y="1072" text-anchor="middle" class="node-sub" font-size="8.5">hyperparameters</text>
+  </g>
+
+  <path d="M230 1060 C 270 1060, 270 912, 230 912" fill="none" stroke="#4A5D3A" stroke-width="1.3" marker-end="url(#arrowAccent2)"/>
+  <path d="M460 1060 C 500 1060, 500 912, 460 912" fill="none" stroke="#4A5D3A" stroke-width="1.3" marker-end="url(#arrowAccent2)"/>
+  <path d="M690 1060 C 730 1060, 730 912, 690 912" fill="none" stroke="#4A5D3A" stroke-width="1.3" marker-end="url(#arrowAccent2)"/>
+  <path d="M920 1060 C 960 1060, 960 912, 920 912" fill="none" stroke="#4A5D3A" stroke-width="1.3" marker-end="url(#arrowAccent2)"/>
+  <text x="965" y="990" class="edge-label" font-size="9" fill="#4A5D3A">retrain if bar not cleared</text>
+
+  <line x1="155" y1="1083" x2="155" y2="1105" stroke="#B9B29E" stroke-width="1.4"/>
+  <line x1="385" y1="1083" x2="385" y2="1105" stroke="#B9B29E" stroke-width="1.4"/>
+  <line x1="615" y1="1083" x2="615" y2="1105" stroke="#B9B29E" stroke-width="1.4"/>
+  <line x1="845" y1="1083" x2="845" y2="1105" stroke="#B9B29E" stroke-width="1.4"/>
+
+  <text x="1105" y="1105" text-anchor="end" class="node-sub" font-size="9.5" fill="#4B4E46">exits loop once metric bar clears</text>
+
+  <line x1="155" y1="1105" x2="845" y2="1105" stroke="#B9B29E" stroke-width="1.5"/>
+  <line x1="500" y1="1105" x2="500" y2="1140" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow3)"/>
+
+  <text x="60" y="1160" text-anchor="middle" class="step-num" font-size="10.5">DAY 7</text>
+
+  <rect x="270" y="1140" width="460" height="56" rx="8" fill="#FFFFFF" stroke="#B9B29E" stroke-width="1.4"/>
+  <text x="500" y="1162" text-anchor="middle" class="node-label" font-size="12.5">Consolidate diagnostics across all 4 lanes</text>
+  <text x="500" y="1178" text-anchor="middle" class="node-sub" font-size="9.5">docs/ visualizations &#183; compare baseline vs tuned</text>
+
+  <line x1="500" y1="1196" x2="500" y2="1225" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow3)"/>
+
+  <rect x="220" y="1225" width="560" height="66" rx="8" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.6"/>
+  <text x="500" y="1250" text-anchor="middle" class="step-num" font-size="11">STEP 7 &#183; FINAL GATE</text>
+  <text x="500" y="1272" text-anchor="middle" class="node-label" font-size="13.5">Refactor notebooks &#8594; src/ modules, publish to GitHub</text>
+
+  <text x="60" y="1330" class="edge-label" font-size="10.5">Notebooks prototype every step first &#8212; 01 &#8594; 02 &#8594; 03 &#8212; and only land in src/ once the logic is stable.</text>
+  <text x="60" y="1352" class="edge-label" font-size="10.5">logs/ captures execution at every stage; a failed audit or leakage check writes here before it reaches a notebook cell.</text>
+
+  <!-- legend -->
+  <g font-family="'IBM Plex Mono','Courier New',monospace" font-size="10.5" fill="#4B4E46">
+    <rect x="60" y="1385" width="11" height="11" rx="3" fill="#E4E9DC" stroke="#4A5D3A"/>
+    <text x="78" y="1394">done / tune step</text>
+    <rect x="240" y="1385" width="11" height="11" rx="3" fill="#F5E4D2" stroke="#B5691E"/>
+    <text x="258" y="1394">active gate / decision</text>
+    <rect x="440" y="1385" width="11" height="11" rx="3" fill="#E3E8EC" stroke="#5B6B7A"/>
+    <text x="458" y="1394">per-target lane header</text>
+    <rect x="640" y="1385" width="11" height="11" rx="3" fill="#FFFFFF" stroke="#B9B29E"/>
+    <text x="658" y="1394">standard step</text>
+    <text x="830" y="1394">dashed border = iterate-until-cleared loop</text>
+  </g>
+</svg>

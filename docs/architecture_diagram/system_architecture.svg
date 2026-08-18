@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1180 760" xmlns="http://www.w3.org/2000/svg" font-family="'IBM Plex Sans', 'Segoe UI', sans-serif">
+  <defs>
+    <style>
+      .node-label{ font-family:'IBM Plex Sans','Segoe UI',sans-serif; font-weight:600; fill:#1C1E1A; }
+      .node-sub{ font-family:'IBM Plex Mono','Courier New',monospace; fill:#4B4E46; }
+      .edge-label{ font-family:'IBM Plex Mono','Courier New',monospace; fill:#4B4E46; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#B9B29E"/>
+    </marker>
+    <marker id="arrowAccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4A5D3A"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1180" height="760" fill="#F7F5F0"/>
+
+  <!-- Raw data -->
+  <g>
+    <rect x="30" y="40" width="200" height="64" rx="8" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.4"/>
+    <text x="130" y="65" text-anchor="middle" class="node-label" font-size="14">data/raw/</text>
+    <text x="130" y="84" text-anchor="middle" class="node-sub" font-size="11">EuroCrop CSV &#183; 53,305 rows</text>
+  </g>
+
+  <line x1="230" y1="72" x2="290" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- data_loader -->
+  <g>
+    <rect x="290" y="40" width="210" height="64" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
+    <text x="395" y="65" text-anchor="middle" class="node-label" font-size="14">src/data_loader.py</text>
+    <text x="395" y="84" text-anchor="middle" class="node-sub" font-size="11">.env path resolve &#183; ingestion</text>
+  </g>
+
+  <line x1="500" y1="72" x2="560" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- preprocessor -->
+  <g>
+    <rect x="560" y="40" width="230" height="64" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
+    <text x="675" y="65" text-anchor="middle" class="node-label" font-size="14">src/preprocessor.py</text>
+    <text x="675" y="84" text-anchor="middle" class="node-sub" font-size="11">contract validation &#183; encode &#183; scale</text>
+  </g>
+
+  <line x1="790" y1="72" x2="850" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- processed split -->
+  <g>
+    <rect x="850" y="40" width="200" height="64" rx="8" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.4"/>
+    <text x="950" y="65" text-anchor="middle" class="node-label" font-size="14">data/processed/</text>
+    <text x="950" y="84" text-anchor="middle" class="node-sub" font-size="11">4&#215; leakage-free train/test</text>
+  </g>
+
+  <!-- vertical drop into fan-out -->
+  <line x1="950" y1="104" x2="950" y2="150" stroke="#B9B29E" stroke-width="1.6"/>
+  <line x1="190" y1="150" x2="950" y2="150" stroke="#B9B29E" stroke-width="1.6"/>
+  <line x1="190" y1="150" x2="190" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="440" y1="150" x2="440" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="690" y1="150" x2="690" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="950" y1="150" x2="950" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- 4 target pipelines -->
+  <g>
+    <rect x="80" y="190" width="220" height="56" rx="8" fill="#FFFFFF" stroke="#4A5D3A" stroke-width="1.4"/>
+    <text x="190" y="212" text-anchor="middle" class="node-label" font-size="13">Spoilage_Risk</text>
+    <text x="190" y="230" text-anchor="middle" class="node-sub" font-size="10.5">regression &#183; vibration + env</text>
+  </g>
+  <g>
+    <rect x="330" y="190" width="220" height="56" rx="8" fill="#FFFFFF" stroke="#4A5D3A" stroke-width="1.4"/>
+    <text x="440" y="212" text-anchor="middle" class="node-label" font-size="13">Efficiency_Ratio</text>
+    <text x="440" y="230" text-anchor="middle" class="node-sub" font-size="10.5">regression &#183; fuel + cost + time</text>
+  </g>
+  <g>
+    <rect x="580" y="190" width="220" height="56" rx="8" fill="#FFFFFF" stroke="#4A5D3A" stroke-width="1.4"/>
+    <text x="690" y="212" text-anchor="middle" class="node-label" font-size="13">Quality_Maintenance</text>
+    <text x="690" y="230" text-anchor="middle" class="node-sub" font-size="10.5">regression &#183; storage + IoT</text>
+  </g>
+  <g>
+    <rect x="840" y="190" width="220" height="56" rx="8" fill="#FFFFFF" stroke="#4A5D3A" stroke-width="1.4"/>
+    <text x="950" y="212" text-anchor="middle" class="node-label" font-size="13">Crop_Type / Vehicle_Type</text>
+    <text x="950" y="230" text-anchor="middle" class="node-sub" font-size="10.5">multiclass classification</text>
+  </g>
+
+  <!-- down to train.py -->
+  <line x1="190" y1="246" x2="190" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="440" y1="246" x2="440" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="690" y1="246" x2="690" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="950" y1="246" x2="950" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- train.py spanning bar -->
+  <rect x="80" y="286" width="980" height="60" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
+  <text x="570" y="311" text-anchor="middle" class="node-label" font-size="14">src/train.py</text>
+  <text x="570" y="330" text-anchor="middle" class="node-sub" font-size="11">baseline &#8594; ensemble &#8594; tuned, fit independently per target</text>
+
+  <line x1="570" y1="346" x2="570" y2="386" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- models/ -->
+  <rect x="380" y="386" width="380" height="60" rx="8" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.4"/>
+  <text x="570" y="411" text-anchor="middle" class="node-label" font-size="14">models/</text>
+  <text x="570" y="430" text-anchor="middle" class="node-sub" font-size="11">4&#215; serialized .joblib binaries</text>
+
+  <line x1="570" y1="446" x2="570" y2="486" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- evaluate.py -->
+  <rect x="330" y="486" width="480" height="60" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
+  <text x="570" y="511" text-anchor="middle" class="node-label" font-size="14">src/evaluate.py</text>
+  <text x="570" y="530" text-anchor="middle" class="node-sub" font-size="11">metrics &#183; residuals &#183; diagnostics &#183; feature importance</text>
+
+  <!-- side outputs from evaluate -->
+  <line x1="470" y1="546" x2="200" y2="600" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="670" y1="546" x2="940" y2="600" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="60" y="600" width="280" height="58" rx="8" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.4"/>
+  <text x="200" y="624" text-anchor="middle" class="node-label" font-size="13">docs/</text>
+  <text x="200" y="643" text-anchor="middle" class="node-sub" font-size="10.5">visualizations &#183; architecture notes</text>
+
+  <rect x="800" y="600" width="280" height="58" rx="8" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.4"/>
+  <text x="940" y="624" text-anchor="middle" class="node-label" font-size="13">logs/</text>
+  <text x="940" y="643" text-anchor="middle" class="node-sub" font-size="10.5">step execution &#183; debug traces</text>
+
+  <!-- cross-cutting: logging touches every stage -->
+  <path d="M940 600 C 940 460, 700 300, 900 104" fill="none" stroke="#B5691E" stroke-width="1.2" stroke-dasharray="3 4" marker-end="url(#arrowAccent)" opacity="0.55"/>
+  <text x="1000" y="360" class="node-sub" font-size="10" fill="#B5691E" transform="rotate(90 1000 360)" opacity="0.75">logging touches every stage</text>
+
+  <!-- notebooks annotation -->
+  <text x="30" y="680" class="edge-label" font-size="11">01_eda_inspection.ipynb &#8594; 02_preprocessing.ipynb &#8594; 03_model_experiments.ipynb prototype each stage before it lands in src/</text>
+
+  <!-- legend -->
+  <g font-family="'IBM Plex Mono','Courier New',monospace" font-size="11" fill="#4B4E46">
+    <rect x="30" y="705" width="11" height="11" rx="3" fill="#F5E4D2" stroke="#B5691E"/>
+    <text x="48" y="714">raw / unstructured artifacts</text>
+    <rect x="260" y="705" width="11" height="11" rx="3" fill="#E3E8EC" stroke="#5B6B7A"/>
+    <text x="278" y="714">shared infrastructure (src/)</text>
+    <rect x="480" y="705" width="11" height="11" rx="3" fill="#E4E9DC" stroke="#4A5D3A"/>
+    <text x="498" y="714">clean / versioned artifacts</text>
+    <rect x="700" y="705" width="11" height="11" rx="3" fill="#FFFFFF" stroke="#4A5D3A"/>
+    <text x="718" y="714">per-target model pipeline</text>
+  </g>
+</svg>
