@@ -1,0 +1,19 @@
+# Data Manipulation & Math
+pandas
+numpy
+
+# Visualization
+matplotlib
+seaborn
+
+# Machine Learning
+scikit-learn
+xgboost
+lightgbm
+
+# Utilities & Logging
+python-dotenv
+joblib
+tqdm
+jupyterlab
+EOF
