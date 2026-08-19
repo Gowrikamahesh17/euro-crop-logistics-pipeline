@@ -16,4 +16,3 @@ python-dotenv
 joblib
 tqdm
 jupyterlab
-EOF

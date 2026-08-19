@@ -16,47 +16,57 @@
 
   <rect x="0" y="0" width="1180" height="760" fill="#F7F5F0"/>
 
-  <!-- Raw data -->
+  <!-- synthetic data generator -->
   <g>
-    <rect x="30" y="40" width="200" height="64" rx="8" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.4"/>
-    <text x="130" y="65" text-anchor="middle" class="node-label" font-size="14">data/raw/</text>
-    <text x="130" y="84" text-anchor="middle" class="node-sub" font-size="11">EuroCrop CSV &#183; 53,305 rows</text>
+    <rect x="10" y="40" width="180" height="64" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
+    <text x="100" y="60" text-anchor="middle" class="node-label" font-size="12.5">src/generate_synthetic</text>
+    <text x="100" y="76" text-anchor="middle" class="node-label" font-size="12.5">_data.py</text>
+    <text x="100" y="93" text-anchor="middle" class="node-sub" font-size="9.5">formula + noise, seeded</text>
   </g>
 
-  <line x1="230" y1="72" x2="290" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="190" y1="72" x2="215" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- Raw data -->
+  <g>
+    <rect x="215" y="40" width="170" height="64" rx="8" fill="#F5E4D2" stroke="#B5691E" stroke-width="1.4"/>
+    <text x="300" y="65" text-anchor="middle" class="node-label" font-size="13.5">data/raw/</text>
+    <text x="300" y="84" text-anchor="middle" class="node-sub" font-size="10.5">synthetic CSV &#183; 53,305 rows</text>
+  </g>
+
+  <line x1="385" y1="72" x2="425" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
 
   <!-- data_loader -->
   <g>
-    <rect x="290" y="40" width="210" height="64" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
-    <text x="395" y="65" text-anchor="middle" class="node-label" font-size="14">src/data_loader.py</text>
-    <text x="395" y="84" text-anchor="middle" class="node-sub" font-size="11">.env path resolve &#183; ingestion</text>
+    <rect x="425" y="40" width="185" height="64" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
+    <text x="517" y="65" text-anchor="middle" class="node-label" font-size="13">src/data_loader.py</text>
+    <text x="517" y="84" text-anchor="middle" class="node-sub" font-size="10">.env path resolve &#183; ingestion</text>
   </g>
 
-  <line x1="500" y1="72" x2="560" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="610" y1="72" x2="650" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
 
   <!-- preprocessor -->
   <g>
-    <rect x="560" y="40" width="230" height="64" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
-    <text x="675" y="65" text-anchor="middle" class="node-label" font-size="14">src/preprocessor.py</text>
-    <text x="675" y="84" text-anchor="middle" class="node-sub" font-size="11">contract validation &#183; encode &#183; scale</text>
+    <rect x="650" y="40" width="200" height="64" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>
+    <text x="750" y="65" text-anchor="middle" class="node-label" font-size="13">src/preprocessor.py</text>
+    <text x="750" y="84" text-anchor="middle" class="node-sub" font-size="10">contract validation &#183; encode &#183; scale</text>
   </g>
 
-  <line x1="790" y1="72" x2="850" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="850" y1="72" x2="890" y2="72" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
 
   <!-- processed split -->
   <g>
-    <rect x="850" y="40" width="200" height="64" rx="8" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.4"/>
-    <text x="950" y="65" text-anchor="middle" class="node-label" font-size="14">data/processed/</text>
-    <text x="950" y="84" text-anchor="middle" class="node-sub" font-size="11">4&#215; leakage-free train/test</text>
+    <rect x="890" y="40" width="170" height="64" rx="8" fill="#E4E9DC" stroke="#4A5D3A" stroke-width="1.4"/>
+    <text x="975" y="65" text-anchor="middle" class="node-label" font-size="13">data/processed/</text>
+    <text x="975" y="84" text-anchor="middle" class="node-sub" font-size="10">4&#215; leakage-free train/test</text>
   </g>
 
   <!-- vertical drop into fan-out -->
-  <line x1="950" y1="104" x2="950" y2="150" stroke="#B9B29E" stroke-width="1.6"/>
-  <line x1="190" y1="150" x2="950" y2="150" stroke="#B9B29E" stroke-width="1.6"/>
+  <line x1="975" y1="104" x2="975" y2="150" stroke="#B9B29E" stroke-width="1.6"/>
+  <line x1="190" y1="150" x2="975" y2="150" stroke="#B9B29E" stroke-width="1.6"/>
   <line x1="190" y1="150" x2="190" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
   <line x1="440" y1="150" x2="440" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
   <line x1="690" y1="150" x2="690" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
-  <line x1="950" y1="150" x2="950" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="975" y1="150" x2="975" y2="190" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
 
   <!-- 4 target pipelines -->
   <g>
@@ -75,16 +85,16 @@
     <text x="690" y="230" text-anchor="middle" class="node-sub" font-size="10.5">regression &#183; storage + IoT</text>
   </g>
   <g>
-    <rect x="840" y="190" width="220" height="56" rx="8" fill="#FFFFFF" stroke="#4A5D3A" stroke-width="1.4"/>
-    <text x="950" y="212" text-anchor="middle" class="node-label" font-size="13">Crop_Type / Vehicle_Type</text>
-    <text x="950" y="230" text-anchor="middle" class="node-sub" font-size="10.5">multiclass classification</text>
+    <rect x="865" y="190" width="220" height="56" rx="8" fill="#FFFFFF" stroke="#4A5D3A" stroke-width="1.4"/>
+    <text x="975" y="212" text-anchor="middle" class="node-label" font-size="13">Vehicle_Type</text>
+    <text x="975" y="230" text-anchor="middle" class="node-sub" font-size="10.5">multiclass &#183; load + distance</text>
   </g>
 
   <!-- down to train.py -->
   <line x1="190" y1="246" x2="190" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
   <line x1="440" y1="246" x2="440" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
   <line x1="690" y1="246" x2="690" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
-  <line x1="950" y1="246" x2="950" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="975" y1="246" x2="975" y2="286" stroke="#B9B29E" stroke-width="1.6" marker-end="url(#arrow)"/>
 
   <!-- train.py spanning bar -->
   <rect x="80" y="286" width="980" height="60" rx="8" fill="#E3E8EC" stroke="#5B6B7A" stroke-width="1.4"/>

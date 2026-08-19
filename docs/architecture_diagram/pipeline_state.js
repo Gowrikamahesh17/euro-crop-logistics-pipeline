@@ -3,11 +3,12 @@
 // architecture_live.html loads this file directly (script tag), so it works
 // with a plain double-click open — no local server needed. Edit, save, refresh.
 window.PIPELINE_STATE = {
-  last_updated: "2026-08-18",
+  last_updated: "2026-08-20",
   nodes: {
-    raw_data:          { status: "done",        note: "CSV present in data/raw/, 53,305 rows confirmed." },
+    generator:         { status: "done",        note: "src/generate_synthetic_data.py built and verified — 53,305 rows, 0% corrupted per the Step 1 contract." },
+    raw_data:          { status: "done",        note: "Original Kaggle CSV found 0% usable (near-total inf corruption) and removed. Replaced with the synthetic same-schema dataset above." },
     data_loader:       { status: "done",        note: "src/data_loader.py resolves paths via .env." },
-    preprocessor:      { status: "pending",     note: "Not started — blocked on Step 1 audit conclusions." },
+    preprocessor:      { status: "pending",     note: "Not started — next up now that Step 1 has a clean dataset." },
     processed_split:   { status: "pending",     note: "Depends on preprocessor.py." },
     target_spoilage:   { status: "pending",     note: "" },
     target_efficiency: { status: "pending",     note: "" },
