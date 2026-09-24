@@ -1,6 +1,7 @@
 # 🌾 Euro Crop Agricultural Logistics — End-to-End ML Pipeline
 
 [![CI](https://github.com/Gowrikamahesh17/euro-crop-logistics-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/Gowrikamahesh17/euro-crop-logistics-pipeline/actions/workflows/ci.yml)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gowrikamahesh17-euro-crop-logistics-pipeline-app-azqtbr.streamlit.app)
 
 An end-to-end Machine Learning pipeline that predicts supply chain efficiency, crop spoilage risk, quality maintenance, and transit classifications across European agricultural supply networks.
 
@@ -44,6 +45,8 @@ Each step also logs to `logs/<step>.log` via `src/log_utils.py`, and appends its
 ---
 
 ## 📊 Results Dashboard
+
+**Live demo: https://gowrikamahesh17-euro-crop-logistics-pipeline-app-azqtbr.streamlit.app**
 
 A **Streamlit dashboard** (`app.py`) explores the model outputs interactively — per-target metrics, residual plots (including residual-vs-predicted, to check for systematic bias), feature importance, confusion matrix, baseline-vs-tuned comparisons, and a reproducibility panel showing the run manifest and hyperparameter search results — reading directly from `models/*.joblib` and the `reports/` written by `src/evaluate.py`. Run `streamlit run app.py` after the pipeline above. The dashboard leads with an explicit disclaimer that current metrics are from synthetic data, not validated production numbers.
 
