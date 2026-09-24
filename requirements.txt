@@ -16,7 +16,6 @@ lightgbm==4.7.0
 python-dotenv
 joblib==1.5.3
 tqdm
-jupyterlab
 
 # Testing
 pytest
