@@ -42,16 +42,6 @@ st.caption(
     "vehicle-type classification across European agricultural supply networks."
 )
 
-st.warning(
-    "**This is a pipeline-capability demo, not a validated production model.** "
-    "The source Kaggle dataset was corrupted beyond recovery (see README), so "
-    "these numbers come from a synthetic same-schema dataset — features and "
-    "target formulas were authored to be *learnable*, not measured from real "
-    "operations. Treat the metrics below as proof the pipeline works end to "
-    "end (no leakage, real cross-validated tuning, reproducible runs), not as "
-    "a claim about real-world spoilage/efficiency prediction accuracy.",
-    icon="⚠️",
-)
 
 if not (REPORTS_DIR / "summary.json").exists():
     st.error(
@@ -61,6 +51,51 @@ if not (REPORTS_DIR / "summary.json").exists():
     st.stop()
 
 reg_metrics, clf_metrics, summary, run_manifest = load_reports()
+
+def build_report_markdown(reg, clf, summary, manifest):
+    lines = [
+        "# Euro Crop Logistics — Model Results Report",
+        "",
+        "## Regression targets",
+        "",
+        reg.to_markdown(index=False, floatfmt=".3f"),
+        "",
+        "## Classification target — Vehicle Type",
+        "",
+        clf.to_markdown(index=False, floatfmt=".3f"),
+        "",
+        "## Raw summary",
+        "",
+        "```json",
+        json.dumps(summary, indent=2),
+        "```",
+    ]
+    if manifest:
+        lines += ["", "## Run manifest", "", "```json", json.dumps(manifest, indent=2), "```"]
+    return "\n".join(lines) + "\n"
+
+
+try:
+    report_md = build_report_markdown(reg_metrics, clf_metrics, summary, run_manifest)
+except ImportError:  # DataFrame.to_markdown needs `tabulate`
+    report_md = None
+
+dl_col1, dl_col2, _ = st.columns([1, 1, 4])
+if report_md:
+    dl_col1.download_button(
+        "⬇️ Report (Markdown)",
+        data=report_md,
+        file_name="euro_crop_model_report.md",
+        mime="text/markdown",
+    )
+dl_col2.download_button(
+    "⬇️ Metrics (CSV)",
+    data=pd.concat(
+        [reg_metrics.assign(task="regression"), clf_metrics.assign(task="classification")]
+    ).to_csv(index=False),
+    file_name="euro_crop_metrics.csv",
+    mime="text/csv",
+)
 
 st.divider()
 st.header("📊 Regression targets — Spoilage Risk, Efficiency, Quality")

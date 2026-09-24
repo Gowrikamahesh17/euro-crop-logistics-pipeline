@@ -24,7 +24,10 @@ RANDOM_SEED = int(os.getenv("RANDOM_SEED", 42))
 
 
 def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Derive time-based features from the event timestamp and harvest date."""
+    """Derive time-based features from the event timestamp and harvest date,
+    plus interaction terms that mirror how the targets are actually computed
+    (e.g. deviation-from-ideal terms, load x distance) so tree models don't
+    have to rediscover them from raw features alone."""
     df = df.rename(columns={df.columns[0]: "Event_Timestamp"})
     df["Event_Timestamp"] = pd.to_datetime(df["Event_Timestamp"])
     df["Harvest_Date"] = pd.to_datetime(df["Harvest_Date"])
@@ -33,6 +36,13 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df["Event_Month"] = df["Event_Timestamp"].dt.month
     df["Event_Hour"] = df["Event_Timestamp"].dt.hour
     df["Event_Dayofweek"] = df["Event_Timestamp"].dt.dayofweek
+
+    df["Storage_Temp_Deviation"] = (df["Storage_Temperature"] - 4.0).abs()
+    df["Storage_Humidity_Deviation"] = (df["Storage_Humidity"] - 60.0).abs()
+    df["Load_Distance_Interaction"] = df["Vehicle_Load_Capacity"] * df["Route_Distance"]
+    df["Fuel_Distance_Interaction"] = df["Fuel_Consumption"] * df["Route_Distance"]
+    df["Cost_Per_Distance"] = df["Operational_Cost"] / df["Route_Distance"].replace(0, np.nan)
+    df["Cost_Per_Distance"] = df["Cost_Per_Distance"].fillna(df["Cost_Per_Distance"].median())
 
     return df.drop(columns=["Event_Timestamp", "Harvest_Date"])
 

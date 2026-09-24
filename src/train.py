@@ -30,25 +30,30 @@ logger = logging.getLogger(__name__)
 RANDOM_SEED = int(os.getenv("RANDOM_SEED", 42))
 
 # How many random hyperparameter combinations to try per tuned model, and
-# how many CV folds to score each one on. Kept small so the full pipeline
-# still runs in well under a minute; raise for a more thorough search.
-N_SEARCH_ITER = int(os.getenv("N_SEARCH_ITER", 15))
-CV_FOLDS = int(os.getenv("CV_FOLDS", 3))
+# how many CV folds to score each one on. Raised from the original 15/3 for a
+# more thorough search now that speed is less of a constraint than accuracy.
+N_SEARCH_ITER = int(os.getenv("N_SEARCH_ITER", 40))
+CV_FOLDS = int(os.getenv("CV_FOLDS", 5))
 
 REGRESSION_PARAM_DIST = {
-    "n_estimators": randint(100, 500),
-    "learning_rate": uniform(0.01, 0.19),
-    "num_leaves": randint(15, 63),
-    "max_depth": randint(3, 12),
-    "subsample": uniform(0.6, 0.4),
+    "n_estimators": randint(100, 700),
+    "learning_rate": uniform(0.01, 0.24),
+    "num_leaves": randint(15, 100),
+    "max_depth": randint(3, 14),
+    "subsample": uniform(0.5, 0.5),
+    "colsample_bytree": uniform(0.5, 0.5),
+    "reg_alpha": uniform(0.0, 1.0),
+    "reg_lambda": uniform(0.0, 1.0),
 }
 
 CLASSIFICATION_PARAM_DIST = {
-    "n_estimators": randint(100, 500),
-    "learning_rate": uniform(0.01, 0.19),
-    "max_depth": randint(3, 10),
-    "subsample": uniform(0.6, 0.4),
-    "colsample_bytree": uniform(0.6, 0.4),
+    "n_estimators": randint(100, 700),
+    "learning_rate": uniform(0.01, 0.24),
+    "max_depth": randint(3, 12),
+    "subsample": uniform(0.5, 0.5),
+    "colsample_bytree": uniform(0.5, 0.5),
+    "min_child_weight": randint(1, 10),
+    "gamma": uniform(0.0, 0.5),
 }
 
 
