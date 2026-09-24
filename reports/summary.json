@@ -1,0 +1,60 @@
+{
+  "regression": [
+    {
+      "target": "Spoilage_Risk",
+      "variant": "baseline",
+      "MAE": 3.9951269832067116,
+      "RMSE": 5.004557788308648,
+      "R2": 0.8608280226055882
+    },
+    {
+      "target": "Spoilage_Risk",
+      "variant": "tuned",
+      "MAE": 4.0418565726140185,
+      "RMSE": 5.066446105654225,
+      "R2": 0.8573646292469617
+    },
+    {
+      "target": "Efficiency_Ratio",
+      "variant": "baseline",
+      "MAE": 4.559816319157664,
+      "RMSE": 5.6964605163356445,
+      "R2": 0.8066684075846868
+    },
+    {
+      "target": "Efficiency_Ratio",
+      "variant": "tuned",
+      "MAE": 4.577749365392467,
+      "RMSE": 5.710913768390698,
+      "R2": 0.8056861081073964
+    },
+    {
+      "target": "Quality_Maintenance_Ratio",
+      "variant": "baseline",
+      "MAE": 3.968726251667007,
+      "RMSE": 4.965453979738614,
+      "R2": 0.8051938262247247
+    },
+    {
+      "target": "Quality_Maintenance_Ratio",
+      "variant": "tuned",
+      "MAE": 4.001550178025323,
+      "RMSE": 5.007205363973776,
+      "R2": 0.8019040477320907
+    }
+  ],
+  "classification": [
+    {
+      "target": "Vehicle_Type",
+      "variant": "baseline",
+      "accuracy": 0.7787643821910956,
+      "f1_macro": 0.6728252008649552
+    },
+    {
+      "target": "Vehicle_Type",
+      "variant": "tuned",
+      "accuracy": 0.7785142571285643,
+      "f1_macro": 0.6772331523188213
+    }
+  ]
+}

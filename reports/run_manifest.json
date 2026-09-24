@@ -1,0 +1,147 @@
+{
+  "last_updated": "2026-09-24T07:57:21.327987+00:00",
+  "git_commit": "e67d816e8e72f68bd8ed1b4790f3d7cfb9a298bf",
+  "data_sha256_16": "a29636ed303968d5",
+  "random_seed": 42,
+  "steps": {
+    "preprocess": {
+      "run_at": "2026-09-24T07:30:09.999290+00:00",
+      "n_rows": 53305,
+      "train_rows": 37313,
+      "val_rows": 7996,
+      "test_rows": 7996,
+      "n_features": 34
+    },
+    "train": {
+      "run_at": "2026-09-24T07:56:56.971609+00:00",
+      "hyperparameter_search": {
+        "Spoilage_Risk": {
+          "best_params": {
+            "colsample_bytree": 0.652848509643591,
+            "learning_rate": 0.05581864747608305,
+            "max_depth": 3,
+            "n_estimators": 355,
+            "num_leaves": 81,
+            "reg_alpha": 0.1694927466860925,
+            "reg_lambda": 0.5568012624583502,
+            "subsample": 0.9680773870803905
+          },
+          "best_cv_score": 0.8610450050179225,
+          "scoring": "r2",
+          "cv_folds": 5,
+          "n_iter": 40
+        },
+        "Efficiency_Ratio": {
+          "best_params": {
+            "colsample_bytree": 0.7678873420373793,
+            "learning_rate": 0.03166954481305799,
+            "max_depth": 3,
+            "n_estimators": 300,
+            "num_leaves": 73,
+            "reg_alpha": 0.18651851039985423,
+            "reg_lambda": 0.040775141554763916,
+            "subsample": 0.795446471594121
+          },
+          "best_cv_score": 0.8036744460890519,
+          "scoring": "r2",
+          "cv_folds": 5,
+          "n_iter": 40
+        },
+        "Quality_Maintenance_Ratio": {
+          "best_params": {
+            "colsample_bytree": 0.7678873420373793,
+            "learning_rate": 0.03166954481305799,
+            "max_depth": 3,
+            "n_estimators": 300,
+            "num_leaves": 73,
+            "reg_alpha": 0.18651851039985423,
+            "reg_lambda": 0.040775141554763916,
+            "subsample": 0.795446471594121
+          },
+          "best_cv_score": 0.7995897056903163,
+          "scoring": "r2",
+          "cv_folds": 5,
+          "n_iter": 40
+        },
+        "Vehicle_Type": {
+          "best_params": {
+            "colsample_bytree": 0.803214529829795,
+            "gamma": 0.004598525808314824,
+            "learning_rate": 0.034353170287847706,
+            "max_depth": 5,
+            "min_child_weight": 9,
+            "n_estimators": 437,
+            "subsample": 0.7428068767931133
+          },
+          "best_cv_score": 0.6823067168123164,
+          "scoring": "f1_macro",
+          "cv_folds": 5,
+          "n_iter": 40
+        }
+      }
+    },
+    "evaluate": {
+      "run_at": "2026-09-24T07:57:21.346281+00:00",
+      "metrics": {
+        "regression": [
+          {
+            "target": "Spoilage_Risk",
+            "variant": "baseline",
+            "MAE": 3.9951269832067116,
+            "RMSE": 5.004557788308648,
+            "R2": 0.8608280226055882
+          },
+          {
+            "target": "Spoilage_Risk",
+            "variant": "tuned",
+            "MAE": 4.0418565726140185,
+            "RMSE": 5.066446105654225,
+            "R2": 0.8573646292469617
+          },
+          {
+            "target": "Efficiency_Ratio",
+            "variant": "baseline",
+            "MAE": 4.559816319157664,
+            "RMSE": 5.6964605163356445,
+            "R2": 0.8066684075846868
+          },
+          {
+            "target": "Efficiency_Ratio",
+            "variant": "tuned",
+            "MAE": 4.577749365392467,
+            "RMSE": 5.710913768390698,
+            "R2": 0.8056861081073964
+          },
+          {
+            "target": "Quality_Maintenance_Ratio",
+            "variant": "baseline",
+            "MAE": 3.968726251667007,
+            "RMSE": 4.965453979738614,
+            "R2": 0.8051938262247247
+          },
+          {
+            "target": "Quality_Maintenance_Ratio",
+            "variant": "tuned",
+            "MAE": 4.001550178025323,
+            "RMSE": 5.007205363973776,
+            "R2": 0.8019040477320907
+          }
+        ],
+        "classification": [
+          {
+            "target": "Vehicle_Type",
+            "variant": "baseline",
+            "accuracy": 0.7787643821910956,
+            "f1_macro": 0.6728252008649552
+          },
+          {
+            "target": "Vehicle_Type",
+            "variant": "tuned",
+            "accuracy": 0.7785142571285643,
+            "f1_macro": 0.6772331523188213
+          }
+        ]
+      }
+    }
+  }
+}

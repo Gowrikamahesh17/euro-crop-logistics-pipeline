@@ -1,0 +1,3 @@
+target,variant,accuracy,f1_macro
+Vehicle_Type,baseline,0.7787643821910956,0.6728252008649552
+Vehicle_Type,tuned,0.7785142571285643,0.6772331523188213
