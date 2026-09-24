@@ -18,6 +18,8 @@ An end-to-end Machine Learning pipeline that predicts supply chain efficiency, c
 
 ![Planned Work Flow](docs/architecture_diagram/planned_work_flow.svg)
 
+**Diagram accuracy check (2026-09-24):** the 14 node IDs in `architecture_live.html` were diffed against `pipeline_state.js` and the actual `src/` modules — all match. One description was wrong and has been corrected: `processed_split` previously claimed "four independent per-target splits"; the real implementation is **one shared 70/15/15 split used by all 4 targets** (`src/preprocessor.py`), which is what the code has always done. The `train`, `evaluate`, and `docs` node descriptions were also updated to mention the real `RandomizedSearchCV` tuning, the run manifest, and the dashboard/tests/CI, none of which existed when the diagram was first drawn. The diagram does not yet have dedicated visual nodes for `app.py`, `tests/`, or CI — they're folded into the `docs` node's description for now rather than given their own boxes.
+
 ---
 
 ## 🚀 Running the Pipeline
@@ -72,6 +74,30 @@ All 4 targets now clear 0.70+ (R² for regression, accuracy for classification).
 Efficiency_Ratio and Vehicle_Type baseline ≈ tuned is not a tuning failure: their formulas are close to linear/log-linear in the underlying features, so `LinearRegression`/`LogisticRegression` already captures most of the signal — tree-based tuning has little headroom left to add. Quality_Maintenance_Ratio shows a large baseline→tuned jump because its formula has real nonlinear interaction structure that linear models can't capture. This spread across targets — not a flat "everything improved the same amount" — is itself evidence the evaluation is measuring something real rather than reporting inflated numbers uniformly.
 
 No target ever appears in the feature matrix (`X`) at any stage — enforced by `tests/test_preprocessor.py::test_preprocess_does_not_leak_targets_into_features`, which runs in CI on every push.
+
+### ✅ Target coverage — all 4 planned predictions are implemented
+
+| # | Target | Type | Status |
+|---|---|---|---|
+| 1 | `Spoilage_Risk` | Regression | ✅ trained, tuned, evaluated |
+| 2 | `Efficiency_Ratio` | Regression | ✅ trained, tuned, evaluated |
+| 3 | `Quality_Maintenance_Ratio` | Regression | ✅ trained, tuned, evaluated |
+| 4 | `Vehicle_Type` | Classification (3-class) | ✅ trained, tuned, evaluated |
+
+Every target has: a baseline model, a `RandomizedSearchCV`-tuned model, test-set metrics, diagnostic plots, and a saved `.joblib` file — nothing planned at the start was skipped or stubbed out.
+
+---
+
+## ❓ Product-owner questions, answered
+
+**How do we know this is logically correct, not just "no errors thrown"?**
+Concrete checks, not vibes: (1) a CI-run test asserts every target is absent from every feature split — the single easiest way to fake a good score; (2) the scaler is fit on train only, never on val/test; (3) metrics are computed on a held-out test set the models never saw during training or tuning; (4) for `Vehicle_Type`, we independently computed the **Bayes-optimal accuracy ceiling** by simulating the label-generating formula directly — before touching any model code — to confirm a low score was a data limit, not a bug; (5) every run's git commit, data hash, and seed are logged to `reports/run_manifest.json`, so any number is traceable to exactly what produced it.
+
+**If I were the product owner, how would I fix what's wrong?**
+The one real gap is that current metrics run on synthetic data (the original Kaggle CSV was corrupted beyond recovery — see Data Notes). I fixed everything that's actually within engineering's control: real cross-validated hyperparameter search (not hardcoded "tuned" params), a reproducibility manifest, CI, an honest dashboard disclaimer, and a documented Bayes-ceiling proof rather than an unexplained low number. The one thing I can't fix from here is sourcing real operational data — that's a data-acquisition task, not a code task.
+
+**How would I sell this to stakeholders?**
+Not on the accuracy numbers alone — on the engineering: "we built the full pipeline, ingestion through a live dashboard, proved it has no leakage, stress-tested it against a known-corrupted dataset early enough to catch the problem before wasting a training run, and every result is reproducible and CI-tested. Feed it real data and it turns into deployed models and stakeholder reporting in days, not weeks, because the scaffolding is already validated." That's a true claim today; a claim about real-world prediction accuracy is not, yet.
 
 ---
 

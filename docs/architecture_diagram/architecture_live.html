@@ -470,16 +470,16 @@
     raw_data:          "Synthetic replacement CSV — 53,305 rows, same schema as the original EuroCrop dataset, 0% corrupted per the Step 1 audit contract.",
     data_loader:        "Resolves the raw data path via .env and hands a loaded DataFrame to the rest of the pipeline.",
     preprocessor:        "Applies the plausibility contract, handles nulls/inf/out-of-range values, encodes categoricals, scales features.",
-    processed_split:    "Four independent leakage-free train/test splits, one per target — a row dropped for one target can still be valid for another.",
+    processed_split:    "A single 70/15/15 train/val/test split shared by all 4 targets (StandardScaler fit on train only, applied to val/test) — not per-target splits. All 4 targets are dropped from X in every split; enforced by an automated leakage-guard test run in CI.",
     target_spoilage:     "Regression target: percentage probability of crop spoilage during transit, driven by environmental + vibration features.",
     target_efficiency:   "Regression target: logistical performance from fuel consumption, cost, distance, and transit time.",
     target_quality:      "Regression target: quality preservation index from storage duration and IoT sensor metrics.",
     target_croptype:     "Multiclass classification target: Vehicle_Type (Truck/Van/Motorbike), generated from a softmax over standardized load capacity and route distance.",
-    train:                "Fits baseline → ensemble → tuned models independently per target.",
-    models:               "Serialized .joblib binaries, one per target model.",
-    evaluate:             "Computes metrics, residuals, diagnostics, and feature importance per target.",
-    docs:                  "Visualizations and architecture notes — this diagram lives here.",
-    logs:                  "Execution and debug logs, written throughout every stage."
+    train:                "Fits a baseline model, then tunes a second model per target via RandomizedSearchCV with cross-validation (not hardcoded params) — 4 targets x 2 variants = 8 models.",
+    models:               "Serialized .joblib binaries, one per target/variant (8 total).",
+    evaluate:             "Computes metrics, residual + residual-vs-predicted diagnostics, feature importance, and a confusion matrix per target, writing to reports/. Also writes reports/run_manifest.json (git commit, data hash, seed, per-step results) for reproducibility.",
+    docs:                  "Visualizations and architecture notes (this diagram), plus the Streamlit results dashboard (app.py), the pytest suite (tests/, 18 cases), and the GitHub Actions CI workflow (.github/workflows/ci.yml) that runs it on every push.",
+    logs:                  "Execution and debug logs (logs/<step>.log), written throughout every stage."
   };
 
   var STATUS_LABEL = { done: "done", in_progress: "in progress", pending: "pending" };
