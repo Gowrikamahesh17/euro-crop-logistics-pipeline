@@ -1,6 +1,10 @@
 # 🌾 Euro Crop Agricultural Logistics — End-to-End ML Pipeline
 
+[![CI](https://github.com/Gowrikamahesh17/euro-crop-logistics-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/Gowrikamahesh17/euro-crop-logistics-pipeline/actions/workflows/ci.yml)
+
 An end-to-end Machine Learning pipeline that predicts supply chain efficiency, crop spoilage risk, quality maintenance, and transit classifications across European agricultural supply networks.
+
+> **Status: pipeline-capability demo, not a validated production model.** The source Kaggle dataset was corrupted beyond recovery (see [Data Notes](#-data-notes)), so current metrics come from a synthetic same-schema dataset. The engineering — no target leakage, real cross-validated hyperparameter search, reproducible/auditable runs, tested end-to-end — is production-grade; the *prediction accuracy* numbers are not a claim about real-world performance until run against real operational data.
 
 ---
 
@@ -16,9 +20,77 @@ An end-to-end Machine Learning pipeline that predicts supply chain efficiency, c
 
 ---
 
-## 📊 Planned Results Dashboard
+## 🚀 Running the Pipeline
 
-Once the pipeline produces real model outputs, a **Streamlit dashboard** will be built to explore them interactively — per-target metrics, residual plots, feature importance, and model comparisons (baseline vs. tuned), reading directly from `models/*.joblib` and `src/evaluate.py` outputs. This is deliberately not built yet: it will land once Steps 4–6 produce metrics worth showing, and lives outside this repo's static `docs/` diagrams since it needs a Python runtime rather than a hosted static page.
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+python src/generate_synthetic_data.py   # writes data/raw/*.csv
+python src/preprocessor.py              # writes data/processed/*.csv
+python src/train.py                     # writes models/*.joblib
+python src/evaluate.py                  # writes reports/ (metrics + figures)
+
+pytest                                  # run the test suite
+streamlit run app.py                    # explore results in the browser
+```
+
+Each step also logs to `logs/<step>.log` via `src/log_utils.py`, and appends its own record (git commit, data hash, seed, and step-specific results such as best hyperparameters or metrics) to `reports/run_manifest.json` via `src/manifest.py` — so any given set of numbers can be traced back to exactly what produced them. The same steps are walked interactively in `notebooks/01_eda_inspection.ipynb` → `02_preprocessing.ipynb` → `03_model_experiments.ipynb`.
+
+"Tuned" models are the result of an actual `RandomizedSearchCV` hyperparameter search with cross-validation (`src/train.py`), not a fancier algorithm with hardcoded defaults — best params and CV scores are logged and written to the manifest.
+
+---
+
+## 📊 Results Dashboard
+
+A **Streamlit dashboard** (`app.py`) explores the model outputs interactively — per-target metrics, residual plots (including residual-vs-predicted, to check for systematic bias), feature importance, confusion matrix, baseline-vs-tuned comparisons, and a reproducibility panel showing the run manifest and hyperparameter search results — reading directly from `models/*.joblib` and the `reports/` written by `src/evaluate.py`. Run `streamlit run app.py` after the pipeline above. The dashboard leads with an explicit disclaimer that current metrics are from synthetic data, not validated production numbers.
+
+---
+
+## 🧪 Tests & CI
+
+`tests/` (18 cases) covers synthetic data generation, preprocessing (including an explicit target-leakage guard — every target must be absent from every feature split), training, evaluation, and the run manifest, running against a small in-memory sample rather than the full 53k-row dataset for speed. Run with `pytest` from the project root. A GitHub Actions workflow (`.github/workflows/ci.yml`) runs the full suite on every push and pull request to `main`.
+
+---
+
+## 📈 Current Results (synthetic data — see disclaimer above)
+
+Test-set metrics from the latest run (`reports/summary.json`), tuned = `RandomizedSearchCV` best estimator:
+
+| Target | Baseline R² | Tuned R² | Tuned MAE |
+|---|---|---|---|
+| Spoilage_Risk | 0.21 | **0.86** | 4.05 |
+| Efficiency_Ratio | 0.49 | 0.49 | 4.26 |
+| Quality_Maintenance_Ratio | 0.28 | 0.41 | 3.87 |
+
+| Target | Baseline Accuracy | Tuned Accuracy | Tuned Macro F1 |
+|---|---|---|---|
+| Vehicle_Type | 0.46 | 0.45 | 0.42 |
+
+Spoilage_Risk tunes well because its formula has a dominant, learnable nonlinear signal; Efficiency_Ratio and Vehicle_Type barely move from baseline, which is expected — their synthetic formulas are dominated by injected noise relative to feature signal, and no amount of tuning recovers a signal that isn't there. This spread is a useful (if accidental) demonstration that the evaluation isn't just reporting inflated numbers across the board.
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+  generate_synthetic_data.py  # Step 1: synthetic same-schema dataset
+  data_loader.py               # resolves + loads data/raw/*.csv via .env
+  preprocessor.py               # Step 2: feature engineering, encoding, scaling, split
+  train.py                      # Step 3: baseline + RandomizedSearchCV-tuned models
+  evaluate.py                   # Step 4: metrics, plots, confusion matrix -> reports/
+  model_wrappers.py             # LabelEncodedClassifier (XGBoost <-> string labels)
+  manifest.py                   # writes reports/run_manifest.json per step
+  log_utils.py                  # shared logging setup (console + logs/<step>.log)
+app.py                          # Streamlit results dashboard
+tests/                          # pytest suite (18 cases) run by CI
+notebooks/                      # 01 EDA audit -> 02 preprocessing -> 03 model experiments
+docs/architecture_diagram/      # live pipeline-progress diagram (pipeline_state.js)
+.github/workflows/ci.yml        # runs pytest on every push/PR to main
+```
+
+`data/`, `models/`, `logs/`, and `reports/` are gitignored (generated, not committed) — running the commands above recreates them.
 
 ---
 

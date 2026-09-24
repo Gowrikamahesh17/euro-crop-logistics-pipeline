@@ -1,6 +1,7 @@
 # Data Manipulation & Math
 pandas
 numpy
+scipy
 
 # Visualization
 matplotlib
@@ -16,3 +17,9 @@ python-dotenv
 joblib
 tqdm
 jupyterlab
+
+# Testing
+pytest
+
+# Dashboard
+streamlit
