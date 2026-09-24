@@ -180,11 +180,6 @@ st.divider()
 st.header("🔍 Reproducibility — run manifest")
 
 if run_manifest:
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Git commit", run_manifest.get("git_commit", "unknown")[:10])
-    col2.metric("Data hash (sha256, first 16)", run_manifest.get("data_sha256_16", "unknown"))
-    col3.metric("Random seed", run_manifest.get("random_seed", "unknown"))
-    st.caption(f"Last updated: {run_manifest.get('last_updated', 'unknown')}")
 
     search_info = run_manifest.get("steps", {}).get("train", {}).get("hyperparameter_search")
     if search_info:
